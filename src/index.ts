@@ -120,3 +120,82 @@ interface TestFan<T> {
 
 let m: TestFan<number> = (v: number): number => v;
 console.log(m(111));
+
+interface GuideItem {
+	name: string,
+	className: string,
+	content: string,
+	callBack: Function
+}
+
+interface GuideArray {
+	[index: number]: GuideItem;
+}
+
+
+export class Singleton {
+  private static instance: Singleton;
+  private static guideStart: boolean = false;
+  public guideArray: any[] = [];
+
+  private constructor () {}
+
+  guideAdd(guide: GuideItem) {
+  	this.guideArray.push(guide);
+  }
+
+  guideRemove(guide: GuideItem) {
+  	let index: number = 0;
+
+  	this.guideArray.forEach((item: GuideItem, index: number) =>{
+  		index = item.name === guide.name ? index : 0;
+  	})
+  	this.guideArray.splice(index, 1);
+  }
+
+  guideShow() {
+  	if(this.guideArray.length > 0) {
+  		setTimeout(() =>{
+  			let current = this.guideArray[0];
+  			console.log(current);
+  			this.guideRemove(current);
+  			this.guideShow();
+  		}, 2000)
+  	}
+  }
+
+  static getInstance (param: GuideItem): Singleton {
+    if (!Singleton.instance) {
+      Singleton.instance = new Singleton();
+    }
+    this.instance.guideAdd(param);
+    if(!this.guideStart) {
+    	this.guideStart = true;
+    	this.instance.guideShow();
+    }
+    return this.instance;
+  }
+}
+
+const singleton1 = Singleton.getInstance({name: 'first', className: 'first class', content: 'first content', callBack: () =>{}})
+const singleton2 = Singleton.getInstance({name: 'second', className: 'second class', content: 'second content', callBack: () =>{}})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
